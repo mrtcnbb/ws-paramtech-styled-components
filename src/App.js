@@ -1,24 +1,46 @@
-import logo from './logo.svg';
-import './App.css';
+import { createGlobalStyle, ThemeProvider } from "styled-components";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Finrota from "./pages/Finrota";
+import Kredim from "./pages/Kredim";
+import Header from "./components/Header";
+import Paramtech from "./pages/Paramtech";
+import Home from "./pages/Home";
+import { useState } from "react";
+import lightTheme from "./themes/light";
+import darkTheme from "./themes/dark";
+
+const GlobalStyle = createGlobalStyle`
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  background: ${(props) => props.theme.bodyBackgroundColor};
+  color: ${(props) => props.theme.bodyFontColor};
+}
+`;
 
 function App() {
+  const [theme, setTheme] = useState(lightTheme);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider
+      theme={{
+        ...theme,
+        setTheme: () => {
+          setTheme((prev) => (prev.id === "light" ? darkTheme : lightTheme));
+        },
+      }}
+    >
+      <GlobalStyle />
+      <BrowserRouter>
+        <Header />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/paramtech" element={<Paramtech />} />
+          <Route path="/finrota" element={<Finrota />} />
+          <Route path="/kredim" element={<Kredim />} />
+        </Routes>
+      </BrowserRouter>
+    </ThemeProvider>
   );
 }
 
